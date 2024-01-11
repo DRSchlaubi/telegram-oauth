@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 import io.ktor.util.*
 
 fun Route.telegram() {
-//    authenticate("session-auth") {
+    authenticate("session-auth") {
         get<Telegram.Initiate> {
             //language=HTML
             call.respondText(
@@ -101,5 +101,5 @@ fun Route.telegram() {
             }.build()
             call.respondRedirect(responseUri)
         }
-//    }
+    }
 }
