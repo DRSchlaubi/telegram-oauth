@@ -8,6 +8,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import io.ktor.util.*
 
 fun Route.telegram() {
@@ -93,7 +94,7 @@ fun Route.telegram() {
             )
 
             val request = call.principal<Session>()!!
-            val data = sessions[request.id]!!
+            val data = sessions.remove(request.id)!!
 
             val responseUri = URLBuilder(data.redirectUri).apply {
                 parameters["code"] = newAuthCode(user)
