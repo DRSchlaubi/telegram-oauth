@@ -1,0 +1,19 @@
+product: jvm/app
+
+settings:
+  kotlin:
+    serialization: json
+  jvm:
+    release: 22
+    mainClass: dev.schlaubi.telegram.MainKt
+
+dependencies:
+  - $libs.ktor.server.netty
+  - $libs.ktor.server.content.negotiation
+  - $libs.ktor.serialization.kotlinx.json
+  - $libs.ktor.server.sessions
+  - $libs.ktor.server.resources
+  - $libs.ktor.server.auth
+  - $libs.slf4j.simple
+  - $libs.stdx.full
+  - $libs.java.jwt

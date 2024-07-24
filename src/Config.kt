@@ -1,7 +1,6 @@
 package dev.schlaubi.telegram
 
 import dev.schlaubi.envconf.Config
-import dev.schlaubi.stdx.core.sha256
 
 object Config : Config() {
     val TELEGRAM_TOKEN by getEnv(transform = String::hashBinarySha256)
