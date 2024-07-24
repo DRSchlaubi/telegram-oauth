@@ -58,7 +58,7 @@ fun Route.telegram() {
                            <div class='centered-div'>
                                 <h2>Please login with Telegram below</h4>
                                 <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                                data-telegram-login="VgdEvV_bot" data-size="large"
+                                data-telegram-login="${Config.TELEGRAM_BOT}" data-size="large"
                                 data-auth-url="${Config.URL}/telegram/callback"></script>
                             </div>
                         </body>

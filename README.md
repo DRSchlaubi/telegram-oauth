@@ -31,6 +31,7 @@ docker image and can be setup the following way
       
 ```
 TELEGRAM_TOKEN=<telegram token>
+TELEGRAM_BOT=<bot name>
 URL=<url from step 1.3>
 JWT_SECRET=<can be generated using pwgen>
 OAUTH_CLIENT_ID=authentik

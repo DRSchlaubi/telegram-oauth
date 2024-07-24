@@ -4,6 +4,7 @@ import dev.schlaubi.envconf.Config
 
 object Config : Config() {
     val TELEGRAM_TOKEN by getEnv(transform = String::hashBinarySha256)
+    val TELEGRAM_BOT by this
     // You can: pwgen -s 50 1
     val JWT_SECRET by getEnv("verrysecurenonsense")
     val URL by getEnv("http://localhost:8080")
