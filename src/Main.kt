@@ -2,10 +2,12 @@ package dev.schlaubi.telegram
 
 import dev.schlaubi.telegram.route.oauth
 import dev.schlaubi.telegram.route.telegram
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.engine.*
+import io.ktor.server.freemarker.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.resources.*
@@ -29,6 +31,9 @@ fun main() {
             session<Session>("session-auth") {
                 validate { it.takeIf { dev.schlaubi.telegram.sessions.containsKey(it.id) } }
             }
+        }
+        install(FreeMarker) {
+            templateLoader = ClassTemplateLoader(ClassLoader.getSystemClassLoader(), "templates")
         }
         routing {
             telegram()

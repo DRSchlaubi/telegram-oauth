@@ -5,6 +5,7 @@ import dev.schlaubi.telegram.models.UserResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.freemarker.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -14,57 +15,11 @@ import io.ktor.util.*
 fun Route.telegram() {
     authenticate("session-auth") {
         get<Telegram.Initiate> {
-            //language=HTML
-            call.respondText(
-                """
-                        <html lang="en">
-                        <head>
-                          <title>Telegram OAuth Authentication Service</title>
-                          <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-                        <body>
-                            <style>
-                                @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-                                body {
-                                    background-color: black;
-                                    font-family: 'Roboto', sans-serif;
-                                    text-align: center;
-
-                                }
-                                
-                                .centered-div {
-                                    position: fixed;
-                                    color: white;
-                                    top: 50%;
-                                    left: 50%;
-                                    transform: translate(-50%, -50%);
-                                    background-color: rgb(43, 45, 49);
-                                    border-radius: 15px;
-                                    padding: 20px;
-                                    text-align: center;
-                                }
-                                @media screen and (max-width: 600px) {
-                                    .centered-div {
-                                        width: 100% !important;
-                                        height: 100% !important;
-                                        top: 0 !important;
-                                        left: 0 !important;
-                                        transform: none !important;
-                                        border-radius: 0;
-                                    }
-                                }
-                            </style>
-
-                           
-                           <div class='centered-div'>
-                                <h2>Please login with Telegram below</h4>
-                                <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                                data-telegram-login="${Config.TELEGRAM_BOT}" data-size="large"
-                                data-auth-url="${Config.URL}/telegram/callback"></script>
-                            </div>
-                        </body>
-                        </html>
-                        """,
-                contentType = ContentType.Text.Html
+            call.respond(
+                FreeMarkerContent(
+                    "index.ftl",
+                    mapOf("config" to Config)
+                )
             )
         }
 

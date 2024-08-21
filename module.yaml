@@ -1,5 +1,4 @@
 product: jvm/app
-
 settings:
   kotlin:
     serialization: json
@@ -13,6 +12,7 @@ dependencies:
   - $libs.ktor.serialization.kotlinx.json
   - $libs.ktor.server.sessions
   - $libs.ktor.server.resources
+  - $libs.ktor.server.freemarker
   - $libs.ktor.server.auth
   - $libs.slf4j.simple
   - $libs.stdx.full
