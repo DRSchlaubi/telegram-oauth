@@ -17,3 +17,6 @@ dependencies:
   - $libs.slf4j.simple
   - $libs.stdx.full
   - $libs.java.jwt
+  - $libs.kord.cache.api
+  - $libs.kord.cache.map
+  - $libs.kord.cache.redis

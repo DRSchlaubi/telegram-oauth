@@ -1,5 +1,12 @@
 package dev.schlaubi.telegram
 
+import dev.kord.cache.api.data.description
+import dev.kord.cache.api.delegate.DelegatingDataCache
+import dev.kord.cache.api.query
+import dev.kord.cache.map.MapLikeCollection
+import dev.kord.cache.map.internal.MapEntryCache
+import dev.kord.cache.redis.RedisConfiguration
+import dev.kord.cache.redis.RedisEntryCache
 import dev.schlaubi.telegram.route.oauth
 import dev.schlaubi.telegram.route.telegram
 import freemarker.cache.ClassTemplateLoader
@@ -13,12 +20,37 @@ import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.resources.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import io.lettuce.core.RedisClient
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.protobuf.ProtoBuf
 
-val sessions = mutableMapOf<String, OAuth.Authorize>()
-
+data class DataSession(val id: String, val redirectUri: String) : Principal
 data class Session(val id: String) : Principal
 
-fun main() {
+@OptIn(ExperimentalSerializationApi::class)
+private val redisConfig by lazy {
+    RedisConfiguration {
+        client = RedisClient.create(Config.REDIS_URL)
+        binaryFormat = ProtoBuf {
+            encodeDefaults = false
+        }
+        reuseConnection = true
+    }
+}
+
+val cache = DelegatingDataCache {
+    default { cache, description ->
+        if (Config.REDIS_URL != null) {
+            RedisEntryCache(cache, description, redisConfig)
+        } else {
+            MapEntryCache(cache, description, MapLikeCollection.concurrentHashMap())
+        }
+    }
+}
+
+suspend fun main() {
+    cache.register(description(DataSession::id))
+
     embeddedServer(Netty, port = 8080) {
         install(Resources)
         install(ContentNegotiation) {
@@ -29,7 +61,7 @@ fun main() {
         }
         install(Authentication) {
             session<Session>("session-auth") {
-                validate { it.takeIf { dev.schlaubi.telegram.sessions.containsKey(it.id) } }
+                validate { it.takeIf { cache.query<Session> { Session::id eq it.id }.singleOrNull() != null } }
             }
         }
         install(FreeMarker) {

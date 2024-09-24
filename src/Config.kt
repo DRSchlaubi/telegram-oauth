@@ -12,4 +12,6 @@ object Config : Config() {
     val OAUTH_REDIRECT_URIS by getEnv { it.split(",\\s*".toRegex()) }
     val OAUTH_CLIENT_ID by this
     val OAUTH_CLIENT_SECRET by this
+
+    val REDIS_URL by getEnv().optional()
 }

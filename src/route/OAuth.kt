@@ -1,6 +1,7 @@
 package dev.schlaubi.telegram.route
 
 import com.auth0.jwt.exceptions.JWTVerificationException
+import dev.kord.cache.api.put
 import dev.schlaubi.telegram.*
 import dev.schlaubi.telegram.models.TokenResponse
 import dev.schlaubi.telegram.models.UserResponse
@@ -20,7 +21,7 @@ import kotlin.time.Duration.Companion.hours
 
 fun Route.oauth() {
     get<OAuth.Authorize> {
-        sessions[it.state] = it
+        cache.put(DataSession(it.state, it.redirectUri))
         call.sessions.set(Session(it.state))
 
         if (it.responseType != "code") {

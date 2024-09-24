@@ -1,5 +1,6 @@
 package dev.schlaubi.telegram.route
 
+import dev.kord.cache.api.query
 import dev.schlaubi.telegram.*
 import dev.schlaubi.telegram.models.UserResponse
 import io.ktor.http.*
@@ -9,7 +10,6 @@ import io.ktor.server.freemarker.*
 import io.ktor.server.resources.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
 import io.ktor.util.*
 
 fun Route.telegram() {
@@ -49,11 +49,15 @@ fun Route.telegram() {
             )
 
             val request = call.principal<Session>()!!
-            val data = sessions.remove(request.id)!!
+            val data = cache.query<DataSession> {
+                DataSession::id eq request.id
+            }
+            val (state, redirectUri) = data.singleOrNull() ?: return@get call.respond(HttpStatusCode.Unauthorized)
+            data.remove()
 
-            val responseUri = URLBuilder(data.redirectUri).apply {
+            val responseUri = URLBuilder(redirectUri).apply {
                 parameters["code"] = newAuthCode(user)
-                parameters["state"] = data.state
+                parameters["state"] = state
             }.build()
             call.respondRedirect(responseUri)
         }
