@@ -63,7 +63,7 @@ suspend fun main() {
         }
         install(Authentication) {
             session<Session>("session-auth") {
-                validate { it.takeIf { cache.query<Session> { Session::id eq it.id }.singleOrNull() != null } }
+                validate { it.takeIf { cache.query<DataSession> { DataSession::id eq it.id }.singleOrNull() != null } }
             }
         }
         install(FreeMarker) {
