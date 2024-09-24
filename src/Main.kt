@@ -22,8 +22,10 @@ import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import io.lettuce.core.RedisClient
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoBuf
 
+@Serializable
 data class DataSession(val id: String, val redirectUri: String) : Principal
 data class Session(val id: String) : Principal
 
