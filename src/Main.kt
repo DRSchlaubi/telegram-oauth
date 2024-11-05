@@ -26,8 +26,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.protobuf.ProtoBuf
 
 @Serializable
-data class DataSession(val id: String, val redirectUri: String) : Principal
-data class Session(val id: String) : Principal
+data class DataSession(val id: String, val redirectUri: String)
+data class Session(val id: String)
 
 @OptIn(ExperimentalSerializationApi::class)
 private val redisConfig by lazy {

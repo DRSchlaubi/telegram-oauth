@@ -1,7 +1,7 @@
 [versions]
-kotlin = "2.0.20"
-ktor = "2.3.12"
-kord-cache = "0.5.4"
+kotlin = "2.0.21"
+ktor = "3.0.1"
+kord-cache = "0.5.6"
 
 [libraries]
 ktor-server-netty = { group = "io.ktor", name = "ktor-server-netty", version.ref = "ktor" }
