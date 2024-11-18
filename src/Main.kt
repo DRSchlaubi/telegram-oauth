@@ -27,6 +27,7 @@ import kotlinx.serialization.protobuf.ProtoBuf
 
 @Serializable
 data class DataSession(val id: String, val redirectUri: String)
+@Serializable
 data class Session(val id: String)
 
 @OptIn(ExperimentalSerializationApi::class)
