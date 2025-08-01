@@ -16,6 +16,7 @@ import io.ktor.server.resources.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import io.ktor.util.*
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.hours
 
@@ -43,12 +44,7 @@ fun Route.oauth() {
         if (formData["redirect_uri"] !in Config.OAUTH_REDIRECT_URIS) {
             throw BadRequestException("Invalid redirect URI")
         }
-        if (formData["client_id"] != Config.OAUTH_CLIENT_ID) {
-            throw BadRequestException("Invalid client id")
-        }
-        if (formData["client_secret"] != Config.OAUTH_CLIENT_SECRET) {
-            throw BadRequestException("Invalid client id")
-        }
+        call.validateClientSecret(formData)
         if (formData["grant_type"] != "authorization_code") {
             throw BadRequestException("Only authorization_code is supported as grant_type")
         }
@@ -85,4 +81,19 @@ fun Route.oauth() {
 
         call.respond(user)
     }
+}
+
+fun ApplicationCall.validateClientSecret(data: Parameters) {
+    val header = request.parseAuthorizationHeader()
+
+    val clientId = Config.OAUTH_CLIENT_ID
+    val clientSecret = Config.OAUTH_CLIENT_SECRET
+    if (header is HttpAuthHeader.Single) {
+        if (header.authScheme.equals("Basic", ignoreCase = true)) {
+            if (header.blob == "$clientId:$clientSecret".encodeBase64()) return
+        }
+    }
+
+    if (clientId != data["client_id"]) throw BadRequestException("Invalid client credentials")
+    if (clientSecret != data["client_secret"]) throw BadRequestException("Invalid client credentials")
 }
