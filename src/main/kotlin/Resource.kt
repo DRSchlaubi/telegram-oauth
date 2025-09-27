@@ -10,7 +10,7 @@ class Telegram {
 
     @Resource("callback")
     class Callback(
-        val id: Int,
+        val id: Long,
         @SerialName("first_name")
         val firstName: String? = null,
         @SerialName("last_name")
