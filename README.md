@@ -1,3 +1,7 @@
+# DEPRECATED!
+
+Use the official OAuth API instead: https://core.telegram.org/bots/telegram-login#openid-connect
+
 # telegram-oauth
 
 Telegram OAuth server for [Telegram Login for Websites](https://core.telegram.org/widgets/login)
